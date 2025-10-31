@@ -1,7 +1,8 @@
 import streamlit as st
+import matplotlib.pyplot as plt
 
 # ============================================================
-# 💪 O CORPO É TEMPLO DE DEUS – Versão Devocional com Design
+# 💪 O CORPO É TEMPLO DE DEUS – Versão Devocional com Design, Peso Ideal e Barra Visual
 # Desenvolvido por Roger | 2025
 # ============================================================
 
@@ -70,11 +71,37 @@ with col2:
 if st.button("📊 Calcular e Ver Resultado"):
     if peso and altura:
         imc = peso / (altura ** 2)
+        peso_ideal = 22.5 * (altura ** 2)
+        diferenca = peso - peso_ideal
+
         st.markdown(f"### 💬 Seu IMC é: **{imc:.2f}**")
+        st.markdown(f"#### 💡 Seu peso ideal seria aproximadamente **{peso_ideal:.1f} kg**")
         st.markdown("---")
 
+        # === GRÁFICO DO IMC ===
+        fig, ax = plt.subplots(figsize=(6, 1.2))
+        ax.set_xlim(10, 40)
+        ax.set_ylim(0, 1)
+        ax.axis("off")
+
+        # Zonas do IMC
+        ax.axvspan(10, 18.5, color="#8ecae6", alpha=0.7, label="Abaixo do Peso")
+        ax.axvspan(18.5, 25, color="#b7e4c7", alpha=0.9, label="Peso Ideal")
+        ax.axvspan(25, 30, color="#ffdd94", alpha=0.8, label="Sobrepeso")
+        ax.axvspan(30, 40, color="#f4978e", alpha=0.8, label="Obesidade")
+
+        # Marcador do IMC atual
+        ax.plot(imc, 0.5, "o", color="black", markersize=10)
+        ax.text(imc, 0.8, f"{imc:.1f}", ha="center", fontsize=10, weight="bold")
+
+        # Legenda
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.3), ncol=4, frameon=False)
+        st.pyplot(fig)
+
+        # --- MENSAGENS CONDICIONAIS ---
         if imc < 18.5:
             st.warning("🩻 Você está **abaixo do peso ideal.**")
+            st.write(f"➡️ Você precisaria **ganhar cerca de {abs(diferenca):.1f} kg** para atingir o peso ideal.")
             st.write("""
             ⚠️ O corpo enfraquecido pode sofrer com **baixa imunidade e fadiga**.  
             🍽️ Fortaleça-se com alimentação equilibrada e orientação médica.  
@@ -88,6 +115,7 @@ if st.button("📊 Calcular e Ver Resultado"):
             """)
         elif 25 <= imc < 30:
             st.warning("⚠️ Você está com **sobrepeso.**")
+            st.write(f"➡️ Você precisaria **perder cerca de {diferenca:.1f} kg** para atingir o peso ideal.")
             st.write("""
             🍎 O excesso de peso pode trazer **cansaço e sobrecarga ao coração.**  
             🚶 Caminhe, hidrate-se e reduza alimentos processados.  
@@ -95,6 +123,7 @@ if st.button("📊 Calcular e Ver Resultado"):
             """)
         else:
             st.error("❗ Você está em **obesidade.**")
+            st.write(f"➡️ Você precisaria **perder cerca de {diferenca:.1f} kg** para atingir o peso ideal.")
             st.write("""
             💔 O corpo em sobrecarga corre risco de **hipertensão, diabetes e doenças cardíacas.**  
             🍃 Mas há esperança: uma rotina saudável e fé podem restaurar seu vigor.  
