@@ -134,5 +134,3 @@ if st.button("📊 Calcular e Ver Resultado"):
         st.info("🌿 *“Amado, desejo que te vá bem em todas as coisas e que tenhas saúde, assim como bem vai a tua alma.”* (3 João 1:2)")
     else:
         st.warning("Por favor, insira valores válidos de peso e altura.")
-
-
